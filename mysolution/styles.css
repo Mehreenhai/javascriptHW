@@ -1,12 +1,16 @@
 .form-control {
   display: inline-block;
-  width: 250px;
+  width: 200px;
   margin-top: 50px;
 }
 
+#search {
+  background-color: powderblue;
+  text-align: center;
+  width: 200px;
+  margin-bottom: 50px;
+}
 
-.form-group {
-  float:left;
-  display:inline-block;
-  
+.body {
+  font-style: italic;
 }
