@@ -1,6 +1,13 @@
 // Get references to the tbody element, input field and button
 var $tbody = document.querySelector("tbody");
-var $dateInput = document.querySelector("#state");
+
+var $dateInput = document.querySelector("#date");
+var $cityInput = document.querySelector("#city");
+var $stateInput = document.querySelector("#state");
+var $countryInput = document.querySelector("#country");
+var $shapeInput = document.querySelector("#shape");
+
+
 var $searchBtn = document.querySelector("#search");
 
 // Add an event listener to the searchButton, call handleSearchButtonClick when clicked
@@ -30,14 +37,27 @@ function renderTable() {
 function handleSearchButtonClick() {
   // Format the user's search by removing leading and trailing whitespace, lowercase the string
   var filterDate = $dateInput.value.trim().toLowerCase();
-
-  // Set sightingsData to an array of all addresses whose "state" matches the filter
+  var filterCity = $cityInput.value.trim().toLowerCase();
+  var filterState = $stateInput.value.trim().toLowerCase();
+  var filterCountry = $countryInput.value.trim().toLowerCase();
+  var filterShape = $shapeInput.value.trim().toLowerCase();
+  
+  // Set sightingsData to an array of all addresses whose "date" matches the filter
   sightingsData = dataSet.filter(function(sighting) {
     var sightingDate = sighting.datetime.toLowerCase();
-
+    var sightingCity = sighting.city.toLowerCase();
+    var sightingState = sighting.state.toLowerCase();
+    var sightingCountry = sighting.country.toLowerCase();
+    var sightingShape = sighting.shape.toLowerCase();
+    
     // If true, add the sighting to the sightingsData, otherwise don't add it to sightingsData
-    return sightingDate === filterDate;
-  });
+    return (filterDate === "" || sightingDate === filterDate)
+        && (filterCity === "" || sightingCity === filterCity)
+        && (filterState === "" || sightingState === filterState)
+        && (filterCountry === "" || sightingCountry === filterCountry)
+        && (filterShape === "" || sightingShape === filterShape);
+  // 
+});
   renderTable();
 }
 
