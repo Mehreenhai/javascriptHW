@@ -7,8 +7,13 @@ var $stateInput = document.querySelector("#state");
 var $countryInput = document.querySelector("#country");
 var $shapeInput = document.querySelector("#shape");
 
-
 var $searchBtn = document.querySelector("#search");
+var $loadMoreBtn = document.querySelector("#next-page");
+
+
+var startingIndex = 0;
+var resultsPerPage = 50;
+
 
 // Add an event listener to the searchButton, call handleSearchButtonClick when clicked
 $searchBtn.addEventListener("click", handleSearchButtonClick);
@@ -19,9 +24,16 @@ var sightingsData = dataSet;
 // renderTable renders the sightingsData to the tbody
 function renderTable() {
   $tbody.innerHTML = "";
-  for (var i = 0; i < sightingsData.length; i++) {
+
+  var endingIndex = startingIndex + resultsPerPage;
+  // Get a section of the addressData array to render
+  var sightingsSubset = sightingsData.slice(startingIndex, endingIndex);
+
+
+  for (var i = 0; i < sightingsSubset.length; i++) {
+   //console.log(sightingsData.length);
     // Get get the current sighting object and its fields
-    var sighting = sightingsData[i];
+    var sighting = sightingsSubset[i];
     var fields = Object.keys(sighting);
     // Create a new row in the tbody, set the index to be i + startingIndex
     var $row = $tbody.insertRow(i);
@@ -34,7 +46,11 @@ function renderTable() {
   }
 }
 
+
+
 function handleSearchButtonClick() {
+
+  startingIndex = 0;
   // Format the user's search by removing leading and trailing whitespace, lowercase the string
   var filterDate = $dateInput.value.trim().toLowerCase();
   var filterCity = $cityInput.value.trim().toLowerCase();
@@ -51,14 +67,29 @@ function handleSearchButtonClick() {
     var sightingShape = sighting.shape.toLowerCase();
     
     // If true, add the sighting to the sightingsData, otherwise don't add it to sightingsData
-    return (filterDate === "" || sightingDate === filterDate)
+    var totalResults = (filterDate === "" || sightingDate === filterDate)
         && (filterCity === "" || sightingCity === filterCity)
         && (filterState === "" || sightingState === filterState)
         && (filterCountry === "" || sightingCountry === filterCountry)
         && (filterShape === "" || sightingShape === filterShape);
+    return totalResults; 
   // 
 });
   renderTable();
+}
+
+$loadMoreBtn.addEventListener("click", handleButtonClick);
+
+function handleButtonClick() {
+  // Increase startingIndex by resultsPerPage, render the next section of the table
+  startingIndex += resultsPerPage;
+  renderTable();
+  // Check to see if there are any more results to render
+  if (startingIndex + resultsPerPage >= sightingsData.length) {
+    $loadMoreBtn.classList.add("disabled");
+    $loadMoreBtn.innerText = "All Sightings Loaded";
+    $loadMoreBtn.removeEventListener("click", handleButtonClick);
+  }
 }
 
 // Render the table for the first time on page load
